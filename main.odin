@@ -1,6 +1,7 @@
-package example
+package main
 
 import rl "vendor:raylib"
+import fmt "core:fmt"
 
 main :: proc() {
     rl.InitWindow(800, 450, "raylib [core] example - basic window")
