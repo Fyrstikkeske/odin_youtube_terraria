@@ -3,9 +3,10 @@ package main
 import rl "vendor:raylib"
 import fmt "core:fmt"
 
-Scale: i32: 16
+ImageSizeInPixels: i32: 8
+TargetBlockPixelSize: i32: 24
 
-WorldSizeX: i32: 16
+WorldSizeX: i32: 32
 
 WorldSizeY: i32: 16
 
@@ -21,7 +22,7 @@ main :: proc() {
 	World := [WorldSizeX*WorldSizeY]BlockType{}
 
 	for i in 0..<len(World){
-		if i32(i) / 16 == 11 {
+		if i32(i) / 16 >= 11 {
 			World[i] = BlockType.Stone
 		}
 		if i32(i32(i) / WorldSizeY) == 10{
@@ -38,7 +39,7 @@ main :: proc() {
     for !rl.WindowShouldClose() {
         rl.BeginDrawing()
             rl.ClearBackground(rl.RAYWHITE)
-            rl.DrawText("Congrats! Ill add some grass for worldgen reasons", 190, 200, 20, rl.BLACK)
+            rl.DrawText("Congrats! im gonna go crazy", 190, 200, 20, rl.BLACK)
 			for i in 0..<len(World){
 				switch World[i]{
 					case BlockType.Air:
@@ -63,9 +64,9 @@ main :: proc() {
 DrawTextureOnWorld :: proc(Sprite: rl.Texture, PositionOnWorldMap: int){
 	rl.DrawTextureEx(Sprite,
 	 rl.Vector2{
-	 f32((i32(PositionOnWorldMap) % WorldSizeX)*Scale),
-	 f32((i32(PositionOnWorldMap)/WorldSizeY)*Scale)},
+	 f32((i32(PositionOnWorldMap) % WorldSizeX)*TargetBlockPixelSize),
+	 f32((i32(PositionOnWorldMap) / WorldSizeY)*TargetBlockPixelSize)},
 	 0,
-	 2, 
+	 f32(TargetBlockPixelSize/ImageSizeInPixels),   //could just precompute, but why care for performance :troll: 
 	 rl.WHITE)
 }
