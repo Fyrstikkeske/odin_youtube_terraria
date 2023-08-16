@@ -19,23 +19,18 @@ BlockType :: enum{
 
 
 main :: proc() {
-	World := [WorldSizeX*WorldSizeY]BlockType{}
- 	count := 0
-	for i in 0..<len(World){
-		if i32(i) / WorldSizeY >= 11 {
-			World[i] = BlockType.Stone
-		}
-		if i32(i32(i) / WorldSizeX) == 10{
-			
-			World[i] = BlockType.Grass
-			count += 1
-			fmt.println(count)
-		}
-		
+	World := [WorldSizeX][WorldSizeY]BlockType{}
+	
+	for x in 0..<len(World){
+	for y in 0..<len(World[x]){
+			if y == 10{
+				World[x][y] = BlockType.Grass
+			} 
+	}
 	}
 
 
-    rl.InitWindow(800, 450, "what da hail")
+    rl.InitWindow(800, 450, "i shoulda done this sooner")
     
 	Stone := rl.LoadTexture("Textures/STONE.png")
 	Grass := rl.LoadTexture("Textures/GRESS.png")
@@ -43,18 +38,20 @@ main :: proc() {
     for !rl.WindowShouldClose() {
         rl.BeginDrawing()
             rl.ClearBackground(rl.RAYWHITE)
-            rl.DrawText("Congrats! worldrender is fine, as long as world is square?", 190, 200, 20, rl.BLACK)
-			for i in 0..<len(World){
-				switch World[i]{
+            rl.DrawText("Congrats! changed worldrender to 2d array?", 190, 200, 20, rl.BLACK)
+			for x in 0..<len(World){
+			for y in 0..<len(World[x]){
+			
+				switch World[x][y]{
 					case BlockType.Air:
 						
 					case BlockType.Stone:
-						DrawTextureOnWorld(Stone, i)
+						DrawTextureOnWorld(Stone, x,y)
 						
 					case BlockType.Grass:
-						DrawTextureOnWorld(Grass, i)
+						DrawTextureOnWorld(Grass, x,y)
 				}
-				
+			}	
 			}
         rl.EndDrawing()
     }
@@ -65,11 +62,11 @@ main :: proc() {
 
 
 //hopefully saves me some boilercode
-DrawTextureOnWorld :: proc(Sprite: rl.Texture, PositionOnWorldMap: int){
+DrawTextureOnWorld :: proc(Sprite: rl.Texture, XPosition: int, YPosition: int){
 	rl.DrawTextureEx(Sprite,
 	 rl.Vector2{
-	 f32( ( i32(PositionOnWorldMap) % WorldSizeX) * TargetBlockPixelSize),
-	 f32( ( i32(PositionOnWorldMap) / WorldSizeY) * TargetBlockPixelSize)},
+	 f32(i32(XPosition)*TargetBlockPixelSize),
+	 f32(i32(YPosition)* TargetBlockPixelSize)},
 	 0,
 	 f32(TargetBlockPixelSize/ImageSizeInPixels),   //could just precompute, but why care for performance :troll: 
 	 rl.WHITE)
